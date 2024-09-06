@@ -48,7 +48,7 @@ resource "google_compute_router_interface" "b-to-a-interface-1" {
   project    = "project-b-434820"
   name       = "b-to-a-interface-1"
   router     = google_compute_router.router-b.name
-  ip_range   = "169.254.0.2/30"
+  ip_range   = "${local.b-to-a-interface-1-ip}/30"
   vpn_tunnel = google_compute_vpn_tunnel.b-to-a-1.name
 }
 
@@ -56,7 +56,7 @@ resource "google_compute_router_peer" "b-to-a-peer-1" {
   project         = "project-b-434820"
   name            = "b-to-a-peer-1"
   router          = google_compute_router.router-b.name
-  peer_ip_address = "169.254.0.1"
+  peer_ip_address = local.a-to-b-interface-1-ip
   peer_asn        = google_compute_router.router-a.bgp[0].asn
   interface       = google_compute_router_interface.b-to-a-interface-1.name
 }
@@ -75,7 +75,7 @@ resource "google_compute_router_interface" "b-to-a-interface-2" {
   project    = "project-b-434820"
   name       = "b-to-a-interface-2"
   router     = google_compute_router.router-b.name
-  ip_range   = "169.254.1.1/30"
+  ip_range   = "${local.b-to-a-interface-2-ip}/30"
   vpn_tunnel = google_compute_vpn_tunnel.b-to-a-2.name
 }
 
@@ -83,7 +83,7 @@ resource "google_compute_router_peer" "b-to-a-peer-2" {
   project         = "project-b-434820"
   name            = "b-to-a-peer-2"
   router          = google_compute_router.router-b.name
-  peer_ip_address = "169.254.1.2"
+  peer_ip_address = local.a-to-b-interface-2-ip
   peer_asn        = google_compute_router.router-a.bgp[0].asn
   interface       = google_compute_router_interface.b-to-a-interface-2.name
 }

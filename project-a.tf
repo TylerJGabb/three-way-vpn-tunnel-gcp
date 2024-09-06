@@ -1,4 +1,3 @@
-
 variable "services_to_enable" {
   type = list(string)
   default = [
@@ -58,7 +57,7 @@ resource "google_compute_router_interface" "a-to-b-interface-1" {
   name       = "a-to-b-interface-1"
   project    = "project-a-434820"
   router     = google_compute_router.router-a.name
-  ip_range   = "169.254.0.1/30"
+  ip_range   = "${local.a-to-b-interface-1-ip}/30"
   vpn_tunnel = google_compute_vpn_tunnel.a-to-b-1.name
 }
 
@@ -66,7 +65,7 @@ resource "google_compute_router_peer" "a-to-b-peer-1" {
   name            = "a-to-b-peer-1"
   project         = "project-a-434820"
   router          = google_compute_router.router-a.name
-  peer_ip_address = "169.254.0.2"
+  peer_ip_address = local.b-to-a-interface-1-ip
   peer_asn        = google_compute_router.router-b.bgp[0].asn
   interface       = google_compute_router_interface.a-to-b-interface-1.name
 }
@@ -85,7 +84,7 @@ resource "google_compute_router_interface" "a-to-b-interface-2" {
   name       = "a-to-b-interface-2"
   project    = "project-a-434820"
   router     = google_compute_router.router-a.name
-  ip_range   = "169.254.1.2/30"
+  ip_range   = "${local.a-to-b-interface-2-ip}/30"
   vpn_tunnel = google_compute_vpn_tunnel.a-to-b-2.name
 }
 
@@ -93,7 +92,7 @@ resource "google_compute_router_peer" "a-to-b-peer-2" {
   name            = "a-to-b-peer-2"
   project         = "project-a-434820"
   router          = google_compute_router.router-a.name
-  peer_ip_address = "169.254.1.1"
+  peer_ip_address = local.b-to-a-interface-2-ip
   peer_asn        = google_compute_router.router-b.bgp[0].asn
   interface       = google_compute_router_interface.a-to-b-interface-2.name
 }
