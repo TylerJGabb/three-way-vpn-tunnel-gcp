@@ -8,5 +8,6 @@ provider "google" {
 terraform {
   backend "gcs" {
     bucket = "tf-state-network-3-way-vpn-sandbox"
+    prefix = "three-way-vpn"
   }
 }
