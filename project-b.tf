@@ -154,3 +154,30 @@ resource "google_compute_router_peer" "b-to-c-peer-1" {
   peer_asn        = google_compute_router.router-c.bgp[0].asn
   interface       = google_compute_router_interface.b-to-c-interface-1.name
 }
+
+resource "google_compute_vpn_tunnel" "b-to-c-2" {
+  name                  = "b-to-c-2"
+  project               = "project-b-434903"
+  vpn_gateway           = google_compute_ha_vpn_gateway.gateway-b.id
+  peer_gcp_gateway      = google_compute_ha_vpn_gateway.gateway-c.id
+  shared_secret         = local.shared_secret
+  router                = google_compute_router.router-b.id
+  vpn_gateway_interface = 1
+}
+
+resource "google_compute_router_interface" "b-to-c-interface-2" {
+  project    = "project-b-434903"
+  name       = "b-to-c-interface-2"
+  router     = google_compute_router.router-b.name
+  ip_range   = "${local.b-to-c-interface-2-ip}/30"
+  vpn_tunnel = google_compute_vpn_tunnel.b-to-c-2.name
+}
+
+resource "google_compute_router_peer" "b-to-c-peer-2" {
+  project         = "project-b-434903"
+  name            = "b-to-c-peer-2"
+  router          = google_compute_router.router-b.name
+  peer_ip_address = local.c-to-b-interface-2-ip
+  peer_asn        = google_compute_router.router-c.bgp[0].asn
+  interface       = google_compute_router_interface.b-to-c-interface-2.name
+}
